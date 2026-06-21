@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-box">
+    <h2>Join WasteConnect</h2>
+    <p style="color:var(--muted); margin-bottom: 22px;">Choose your account type to continue.</p>
+    <div style="display:flex; gap:14px;">
+        <a href="{% url 'accounts:donor_signup' %}" class="btn" style="flex:1; text-align:center;">I'm a Donor</a>
+        <a href="{% url 'accounts:ngo_signup' %}" class="btn outline" style="flex:1; text-align:center;">I'm an NGO</a>
+    </div>
+    <p style="margin-top:18px; font-size:0.9rem;">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+</div>
+{% endblock %}

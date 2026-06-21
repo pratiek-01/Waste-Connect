@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-box">
+    <h2>{{ user_obj.organization_name|default:user_obj.username }}</h2>
+    <p class="meta">Role: {{ user_obj.get_role_display }}</p>
+    <p class="meta">City: {{ user_obj.city|default:"—" }}</p>
+    <p class="meta">Phone: {{ user_obj.phone|default:"—" }}</p>
+    {% if user_obj.role == 'ngo' %}
+        <p class="meta">Verification status:
+            {% if user_obj.is_verified %}<span class="status-delivered">Verified ✅</span>
+            {% else %}<span class="status-pending">Pending admin review</span>{% endif %}
+        </p>
+    {% endif %}
+</div>
+{% endblock %}

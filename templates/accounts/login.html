@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-box">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">Login</button>
+    </form>
+    <p style="margin-top:14px; font-size:0.9rem;">No account? <a href="{% url 'accounts:signup_choice' %}">Sign up</a></p>
+</div>
+{% endblock %}

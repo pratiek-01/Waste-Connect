@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="form-box">
+    <h2>New Donation Listing</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-row">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<p style="color:#c0392b; font-size:0.8rem;">{{ field.errors|join:", " }}</p>{% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">Post Listing</button>
+    </form>
+</div>
+{% endblock %}

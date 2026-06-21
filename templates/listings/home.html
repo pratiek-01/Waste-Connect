@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+    <h1>Surplus food shouldn't go to waste.</h1>
+    <p>WasteConnect connects restaurants, hotels and event venues with verified NGOs and shelters in real time — so good food and resources reach people who need them, not the bin.</p>
+    <div class="hero-actions">
+        <a href="{% url 'accounts:signup_choice' %}" class="primary">Get Started</a>
+        <a href="{% url 'listings:browse_listings' %}" class="secondary">Browse Donations</a>
+    </div>
+</section>
+
+<h2>Recently Listed</h2>
+{% if recent %}
+<div class="grid">
+    {% for listing in recent %}
+    <div class="card">
+        <span class="tag">{{ listing.get_category_display }}</span>
+        <h3>{{ listing.title }}</h3>
+        <p class="meta">{{ listing.city }} · expires {{ listing.expiry_time|date:"d M, H:i" }}</p>
+        <a href="{% url 'listings:listing_detail' listing.pk %}">View details →</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">No active listings right now. Check back soon.</div>
+{% endif %}
+{% endblock %}

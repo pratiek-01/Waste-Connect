@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}WasteConnect{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header class="navbar">
+        <a href="{% url 'listings:home' %}" class="brand">🌿 WasteConnect</a>
+        <nav>
+            <a href="{% url 'listings:browse_listings' %}">Browse Donations</a>
+            {% if user.is_authenticated %}
+                {% if user.role == 'donor' %}
+                    <a href="{% url 'listings:donor_dashboard' %}">My Listings</a>
+                    <a href="{% url 'listings:create_listing' %}">+ New Listing</a>
+                {% elif user.role == 'ngo' %}
+                    <a href="{% url 'listings:ngo_dashboard' %}">My Claims</a>
+                {% endif %}
+                <a href="{% url 'accounts:profile' %}">{{ user.username }}</a>
+                <form action="{% url 'accounts:logout' %}" method="post" class="inline-form">
+                    {% csrf_token %}
+                    <button type="submit" class="link-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'accounts:login' %}">Login</a>
+                <a href="{% url 'accounts:signup_choice' %}" class="cta">Sign Up</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>WasteConnect — Connecting surplus to people who need it.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Browse Active Donations</h2>
+
+<form method="get" class="filter-bar">
+    <div class="form-row">
+        <label>Search</label>
+        {{ filter_form.q }}
+    </div>
+    <div class="form-row">
+        <label>City</label>
+        {{ filter_form.city }}
+    </div>
+    <div class="form-row">
+        <label>Category</label>
+        {{ filter_form.category }}
+    </div>
+    <button type="submit" class="btn small">Filter</button>
+</form>
+
+{% if page_obj %}
+<div class="grid">
+    {% for listing in page_obj %}
+    <div class="card">
+        <span class="tag">{{ listing.get_category_display }}</span>
+        <h3>{{ listing.title }}</h3>
+        <p class="meta">{{ listing.city }} · {{ listing.quantity }}</p>
+        <p class="meta">Expires {{ listing.expiry_time|date:"d M, H:i" }}</p>
+        <a href="{% url 'listings:listing_detail' listing.pk %}">View & Claim →</a>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">‹ Prev</a>{% endif %}
+    <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next ›</a>{% endif %}
+</div>
+{% else %}
+<div class="empty-state">No matching donations found.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="detail-box">
+    {% if listing.image %}<img src="{{ listing.image.url }}" alt="{{ listing.title }}">{% endif %}
+    <span class="tag">{{ listing.get_category_display }}</span>
+    <h2>{{ listing.title }}</h2>
+    <p class="meta">Posted by {{ listing.donor.organization_name|default:listing.donor.username }} · {{ listing.city }}</p>
+    <p>{{ listing.description }}</p>
+    <p><strong>Quantity:</strong> {{ listing.quantity }}</p>
+    <p><strong>Pickup address:</strong> {{ listing.pickup_address }}</p>
+    <p><strong>Expiry:</strong> {{ listing.expiry_time|date:"d M Y, H:i" }}</p>
+    <p><strong>Status:</strong> <span class="status-{{ listing.status }}">{{ listing.get_status_display }}</span></p>
+
+    {% if user.is_authenticated %}
+        {% if user.role == 'ngo' and listing.status == 'pending' %}
+            <form method="post" action="{% url 'listings:claim_listing' listing.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Claim this Donation</button>
+            </form>
+        {% endif %}
+
+        {% if listing.donor_id == user.id or listing.claimed_by_id == user.id %}
+            <form method="post" action="{% url 'listings:update_status' listing.pk %}" style="margin-top:14px;">
+                {% csrf_token %}
+                <div class="form-row">
+                    <label>Update Status</label>
+                    <select name="status">
+                        {% for value, label in listing.STATUS_CHOICES %}
+                            <option value="{{ value }}" {% if value == listing.status %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn small outline">Update</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    {% if listing.logistics_updates.all %}
+    <h4 style="margin-top:24px;">Tracking History</h4>
+    <ul class="timeline">
+        {% for update in listing.logistics_updates.all %}
+        <li>{{ update.timestamp|date:"d M, H:i" }} — {{ update.get_status_display }} {% if update.note %}({{ update.note }}){% endif %}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

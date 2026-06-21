@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center;">
+    <h2>My Listings</h2>
+    <a href="{% url 'listings:create_listing' %}" class="btn small">+ New Listing</a>
+</div>
+
+{% if page_obj %}
+<div class="grid">
+    {% for listing in page_obj %}
+    <div class="card">
+        <span class="tag">{{ listing.get_category_display }}</span>
+        <h3>{{ listing.title }}</h3>
+        <p class="meta">{{ listing.city }} · {{ listing.quantity }}</p>
+        <p class="status-{{ listing.status }}">{{ listing.get_status_display }}</p>
+        <a href="{% url 'listings:listing_detail' listing.pk %}">Manage →</a>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">‹ Prev</a>{% endif %}
+    <span class="current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next ›</a>{% endif %}
+</div>
+{% else %}
+<div class="empty-state">You haven't posted any listings yet.</div>
+{% endif %}
+{% endblock %}
